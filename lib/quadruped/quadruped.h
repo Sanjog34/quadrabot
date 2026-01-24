@@ -1,5 +1,6 @@
 #ifndef QUADRUPED_H
 #define QUADRUPED_H
+// #pragma once
 #include <ESP32Servo.h>
 
 enum Side { left=0,right=1 };
@@ -65,6 +66,7 @@ public:
     void say_hi();
     void shake_hand();
     void moveTo_base_pos();
+    void move_vert();
     void print_angles(double hipfr, double kneefr,double length_fr,double height_fr, double hipbr, double kneebr,double length_br,double height_br);
 };
 #endif
