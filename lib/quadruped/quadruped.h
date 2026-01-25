@@ -26,15 +26,19 @@ public:
     Leg(double Humerus, double Radius,int hip_pin,int knee_pin,int leg_id);
     void set_offset(double hip_offset, double knee_offset);
     void get_angles(double height, double length);
+    void calibrate();
     void move_vertical();
     void move_horizontal();
     void init(double Height, double );
     void moveTo_base_pos();
     void move_leg();
+    double get_hipoffset();
+    double get_kneeoffset();
     double get_hip_angle();
-    double get_knee_angle();
+     double get_knee_angle();
     void move_arc();
     void crawl_forward();
+    void move_angles(double hipangle,double kneeangle                                                                         );
     void print_angles(double length,double height);
 };
 
