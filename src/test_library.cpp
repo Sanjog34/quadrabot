@@ -17,14 +17,18 @@ void setup()
     back_left.move_angles(180, 0);
     back_right.move_angles(0, 180);
     front_left.move_angles(180, 0);
+    front_right.move_angles(0, 180);
     delay(1000);
-    front_left.set_offset(-6, 0);
-    back_left.set_offset(-8, 0);
-    back_right.set_offset(0, 0);
+    // back_left.set_offset(-8, 0);
+    // back_right.set_offset(0, 0);
+    // front_left.set_offset(-6, 0);
+    // front_right.set_offset(0, 0);
+
     delay(1000);
     back_left.move_angles(180, 0);
     back_right.move_angles(0, 180);
     front_left.move_angles(180, 0);
+    front_right.move_angles(0, 180);
     delay(1000);
     quadruped.moveTo_base_pos();
 }

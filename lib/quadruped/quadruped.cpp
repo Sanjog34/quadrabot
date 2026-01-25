@@ -68,7 +68,7 @@ void Leg::get_angles(double height, double length)
     }
     else if (leg_id == left)
     {
-        int hip_deg = int(90 - (180.0 / M_PI) * (atan2(length, height) + acos(hip_arg)) );
+        int hip_deg = int(90 - (180.0 / M_PI) * (atan2(length, height) + acos(hip_arg)));
         knee_angle = int((180.0 / M_PI) * (acos(knee_arg)));
         hip_angle = map(hip_deg, 0, 180, 180, 0);
         // knee_angle = map(knee_deg, 0, 180, 180, 0);
@@ -148,26 +148,15 @@ void Leg ::crawl_forward()
 
 void Leg::move_leg()
 {
-    if (leg_id==0){
     servohip.write(hip_angle + hip_offset);
-    servoknee.write(knee_angle - knee_offset);
-    }
-    else if(leg_id==1){
-    servohip.write(hip_angle - hip_offset);
-    servoknee.write(knee_angle + knee_offset);    
-    }
+    servoknee.write(knee_angle + knee_offset);
 }
 
 void Leg ::move_angles(double hipangle, double kneeangle)
 {
-    if (leg_id==0){
+
     servohip.write(hipangle + hip_offset);
-    servoknee.write(kneeangle - knee_offset);
-    }
-    else if(leg_id==1){
-    servohip.write(hipangle - hip_offset);
-    servoknee.write(kneeangle + knee_offset);    
-    }
+    servoknee.write(kneeangle + knee_offset);
 }
 
 double Leg::get_hipoffset()
@@ -190,7 +179,6 @@ double Leg::get_knee_angle()
     return knee_angle;
 }
 
-
 void Leg ::print_angles(double length, double height)
 {
     DEBUG_PRINT(hip_angle);
@@ -212,135 +200,85 @@ void Quadruped::init(double height, double step_size)
     Back_Left.init(this->height, this->step_size);
     Back_Right.init(this->height, this->step_size);
 }
-void Leg ::calibrate()
+void Leg ::calibrate(String name)
 {
+    DEBUG_PRINT("calibrating ");
+    DEBUG_PRINT(name);
+    DEBUG_PRINT("\n\n");
     char c;
-    if (leg_id == 0)
-    {
-        double anglehip = 180;
-        double angleknee = 0;
-        servohip.write(anglehip);
-        servoknee.write(angleknee);
-        DEBUG_PRINT("setting hip offset\n\n");
-        DEBUG_PRINT("PRESS 'a' TO INCREASE OFFSET AND 's' TO DECREASE OFFSET\n AND 'x' TO CONFIRM\n\n");
-        do
-        {
-            if (Serial.available())
-            {
-                c = Serial.read();
-                if (c == 'a')
-                {
-                    hip_offset++;
-                    servohip.write(anglehip + hip_offset);
-                }
-                else if (c == 's')
-                {
-                    hip_offset--;
-                    servohip.write(anglehip + hip_offset);
-                }
-                DEBUG_PRINT("hip offset = ");
-                DEBUG_PRINT(hip_offset);
-                DEBUG_PRINT("\n");
-            }
-        } while (c != 'x');
-        c = 'o';
-
-        DEBUG_PRINT("setting knee offset\n\n");
-        DEBUG_PRINT("PRESS 'a' TO INCREASE OFFSET AND 's' TO DECREASE OFFSET\n AND 'x' TO CONFIRM\n\n");
-        do
-        {
-            if (Serial.available())
-            {
-                c = Serial.read();
-                if (c == 'a')
-                {
-                    knee_offset++;
-                    servoknee.write(angleknee - knee_offset);
-                }
-                else if (c == 's')
-                {
-                    knee_offset--;
-                    servoknee.write(angleknee - knee_offset);
-                }
-                DEBUG_PRINT("knee offset = ");
-                DEBUG_PRINT(knee_offset);
-                DEBUG_PRINT("\n");
-            }
-        } while (c != 'x');
-
-        DEBUG_PRINT("done calibrating leg!!!\n");
-    }
+    double anglehip = 180;
+    double angleknee = 0;
     if (leg_id == 1)
     {
-        double anglehip =0;
+        double anglehip = 0;
         double angleknee = 180;
-        servohip.write(anglehip);
-        servoknee.write(angleknee);
-        DEBUG_PRINT("setting hip offset\n\n");
-        DEBUG_PRINT("PRESS 'a' TO INCREASE OFFSET AND 's' TO DECREASE OFFSET\n AND 'x' TO CONFIRM\n\n");
-        do
-        {
-            if (Serial.available())
-            {
-                c = Serial.read();
-                if (c == 'a')
-                {
-                    hip_offset++;
-                    servohip.write(anglehip - hip_offset);
-                }
-                else if (c == 's')
-                {
-                    hip_offset--;
-                    servohip.write(anglehip - hip_offset);
-                }
-                DEBUG_PRINT("hip offset = ");
-                DEBUG_PRINT(hip_offset);
-                DEBUG_PRINT("\n");
-            }
-        } while (c != 'x');
-
-        c = 'o';
-
-        DEBUG_PRINT("setting knee offset\n\n");
-        DEBUG_PRINT("PRESS 'a' TO INCREASE OFFSET AND 's' TO DECREASE OFFSET\n AND 'x' TO CONFIRM\n\n");
-        do
-        {
-            if (Serial.available())
-            {
-                c = Serial.read();
-                if (c == 'a')
-                {
-                    knee_offset++;
-                    servoknee.write(angleknee + knee_offset);
-                }
-                else if (c == 's')
-                {
-                    knee_offset--;
-                    servoknee.write(angleknee + knee_offset);
-                }
-                DEBUG_PRINT("knee offset = ");
-                DEBUG_PRINT(knee_offset);
-                DEBUG_PRINT("\n");
-            }
-        } while (c != 'x');
-
-        DEBUG_PRINT("done calibrating leg!!!\n");
     }
+    servohip.write(anglehip);
+    servoknee.write(angleknee);
+    DEBUG_PRINT("setting hip offset\n");
+    DEBUG_PRINT("PRESS 'a' TO INCREASE OFFSET AND 's' TO DECREASE OFFSET\n AND 'x' TO CONFIRM\n\n");
+    do
+    {
+        if (Serial.available())
+        {
+            c = Serial.read();
+            if (c == 'a')
+            {
+                hip_offset++;
+                servohip.write(anglehip + hip_offset);
+            }
+            else if (c == 's')
+            {
+                hip_offset--;
+                servohip.write(anglehip + hip_offset);
+            }
+            DEBUG_PRINT("hip offset = ");
+            DEBUG_PRINT(hip_offset);
+            DEBUG_PRINT("\n");
+        }
+    } while (c != 'x');
+    servohip.write(90);
+    c = 'o';
+
+    DEBUG_PRINT("setting knee offset\n\n");
+    DEBUG_PRINT("PRESS 'a' TO INCREASE OFFSET AND 's' TO DECREASE OFFSET\n AND 'x' TO CONFIRM\n\n");
+    do
+    {
+        if (Serial.available())
+        {
+            c = Serial.read();
+            if (c == 'a')
+            {
+                knee_offset++;
+                servoknee.write(angleknee + knee_offset);
+            }
+            else if (c == 's')
+            {
+                knee_offset--;
+                servoknee.write(angleknee + knee_offset);
+            }
+            DEBUG_PRINT("knee offset = ");
+            DEBUG_PRINT(knee_offset);
+            DEBUG_PRINT("\n");
+        }
+    } while (c != 'x');
+
+    DEBUG_PRINT("done calibrating leg!!!\n");
 }
 
 void Quadruped::move_bot()
 {
-    Front_Left.servohip.write(Front_Left.get_hip_angle()+Front_Left.get_hipoffset());
-    Front_Left.servoknee.write(Front_Left.get_knee_angle()-Front_Left.get_kneeoffset());
+    Front_Left.servohip.write(Front_Left.get_hip_angle() + Front_Left.get_hipoffset());
+    Front_Left.servoknee.write(Front_Left.get_knee_angle() - Front_Left.get_kneeoffset());
 
-    Front_Right.servohip.write(Front_Right.get_hip_angle()-Front_Right.get_hipoffset());
-    Front_Right.servoknee.write(Front_Right.get_knee_angle()+Front_Right.get_kneeoffset());
+    Front_Right.servohip.write(Front_Right.get_hip_angle() - Front_Right.get_hipoffset());
+    Front_Right.servoknee.write(Front_Right.get_knee_angle() + Front_Right.get_kneeoffset());
 
-    Back_Left.servohip.write(Back_Left.get_hip_angle()+Back_Left.get_hipoffset());
-    Back_Left.servoknee.write(Back_Left.get_knee_angle()-Back_Left.get_kneeoffset());
+    Back_Left.servohip.write(Back_Left.get_hip_angle() + Back_Left.get_hipoffset());
+    Back_Left.servoknee.write(Back_Left.get_knee_angle() - Back_Left.get_kneeoffset());
 
-    Back_Right.servohip.write(Back_Right.get_hip_angle()-Back_Right.get_hipoffset());
-    Back_Right.servoknee.write(Back_Right.get_knee_angle()+Back_Right.get_kneeoffset());
+    Back_Right.servohip.write(Back_Right.get_hip_angle() - Back_Right.get_hipoffset());
+    Back_Right.servoknee.write(Back_Right.get_knee_angle() + Back_Right.get_kneeoffset());
 
     delay(8);
 }
@@ -467,26 +405,23 @@ void Quadruped::shake_hand()
 {
     moveTo_base_pos();
     delay(200);
-    Front_Right.servohip.write(0);
+    Front_Right.servohip.write(180);
     Front_Right.servoknee.write(0);
     delay(500);
     for (int times = 0; times < 3; times++)
     {
-        for (float i = 0; i <= 20; i = i + 2)
+        for (float i = 180; i >= 160; i = i - 2)
         {
             Front_Right.servohip.write(i);
             delay(8);
         }
-        for (float i = 20; i >= 0; i = i - 2)
+        for (float i = 160; i <= 180; i = i + 2)
         {
             Front_Right.servohip.write(i);
             delay(8);
         }
     }
     moveTo_base_pos();
-}
-void Quadruped ::print_angles(double hipfl, double kneefl, double length_fl, double height_fl, double hipbl, double kneebl, double length_bl, double height_bl)
-{
 }
 
 void Quadruped ::move_vert()
@@ -510,4 +445,11 @@ void Quadruped ::move_vert()
         move_bot();
     }
     moveTo_base_pos();
+}
+
+void Quadruped :: calibrate(){
+    Back_Left.calibrate("Back left");
+    Back_Right.calibrate("Back right");
+    Front_Left.calibrate("Front left");
+    Front_Right.calibrate("Front right");
 }
