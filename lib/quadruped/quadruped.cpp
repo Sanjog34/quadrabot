@@ -245,10 +245,18 @@ void Quadruped::init(double height, double step_size)
 
 void Quadruped::move_bot()
 {
-    Front_Left.move_leg();
-    Front_Right.move_leg();
-    Back_Left.move_leg();
-    Back_Right.move_leg();
+    Front_Left.servohip.write(Front_Left.get_hip_angle() + Front_Left.get_hipoffset());
+    Front_Left.servoknee.write(Front_Left.get_knee_angle() - Front_Left.get_kneeoffset());
+
+    Front_Right.servohip.write(Front_Right.get_hip_angle() - Front_Right.get_hipoffset());
+    Front_Right.servoknee.write(Front_Right.get_knee_angle() + Front_Right.get_kneeoffset());
+
+    Back_Left.servohip.write(Back_Left.get_hip_angle() + Back_Left.get_hipoffset());
+    Back_Left.servoknee.write(Back_Left.get_knee_angle() - Back_Left.get_kneeoffset());
+
+    Back_Right.servohip.write(Back_Right.get_hip_angle() - Back_Right.get_hipoffset());
+    Back_Right.servoknee.write(Back_Right.get_knee_angle() + Back_Right.get_kneeoffset());
+
     delay(8);
 }
 
