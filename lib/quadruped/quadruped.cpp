@@ -3,7 +3,7 @@
 #include <math.h>
 #include <quadruped.h>
 
-#define DEBUG
+// #define DEBUG
 #ifdef DEBUG
 #define DEBUG_PRINT(x) Serial.print(x)
 #else
@@ -81,19 +81,19 @@ void Leg::move_vertical()
 
     for (float i = height; i >= 5; i = i - 0.1)
     {
-        get_angles(i, step_size);
-        print_angles(step_size, i);
+        get_angles(i, 0);
+        print_angles(0, i);
         move_leg();
     }
     for (float i = 5; i <= height; i = i + 0.1)
     {
-        get_angles(i, step_size);
-        print_angles(step_size, i);
+        get_angles(i, 0);
+        print_angles(0, i);
         move_leg();
     }
 }
 
-void Leg::move_horizontal()   // only for eft side leg
+void Leg::move_horizontal()
 {
     // for (float i = 0; i >= -1*step_size; i = i - 0.1)
     // {
@@ -108,7 +108,7 @@ void Leg::move_horizontal()   // only for eft side leg
         move_leg();
     }
 }
-void Leg ::move_arc()  //only for left side leg
+void Leg ::move_arc()
 {
     const int frames = 40;
     double y_arc;
@@ -124,26 +124,27 @@ void Leg ::move_arc()  //only for left side leg
     }
 }
 
-void Leg ::crawl_forward()    // only for left side leg
+void Leg ::crawl_forward()
 {
-    if (pos == 0)
-    {
-        move_arc();
-        pos = 1;
-        return;
-    }
-    else if (pos == 1)
-    {
-        move_horizontal();
-        pos = 0;
-        return;
-    }
+ if (pos == 0)
+{
+    move_arc();
+    pos = 1;
+    return;
+}
+else if (pos == 1)
+{
+    move_horizontal();
+    pos = 0;
+    return;
+}
 }
 
 void Leg::move_leg()
 {
     servohip.write(hip_angle + hip_offset);
     servoknee.write(knee_angle + knee_offset);
+    delay(8);
 }
 
 void Leg ::move_angles(double hipangle, double kneeangle)
@@ -151,8 +152,8 @@ void Leg ::move_angles(double hipangle, double kneeangle)
 
     servohip.write(hipangle + hip_offset);
     servoknee.write(kneeangle + knee_offset);
+    delay(8);
 }
-
 
 void Leg ::print_angles(double length, double height)
 {
@@ -165,7 +166,6 @@ void Leg ::print_angles(double length, double height)
     DEBUG_PRINT(height);
     DEBUG_PRINT("\n");
 }
-
 
 void Leg ::calibrate(String name)
 {
@@ -233,10 +233,6 @@ void Leg ::calibrate(String name)
     DEBUG_PRINT("done calibrating leg!!!\n");
 }
 
-
-
-
-
 void Quadruped::init(double height, double step_size)
 {
     this->height = height;
@@ -268,7 +264,8 @@ void Quadruped::moveTo_base_pos()
 
 void Quadruped::move_forward()
 {
-    Serial.println(initial_position);
+    DEBUG_PRINT(initial_position);
+    DEBUG_PRINT("\n");
     if (initial_position == -1)
     {
         for (double i = 0; i >= -step_size; i = i - 0.5)
@@ -287,7 +284,7 @@ void Quadruped::move_forward()
         double y_arc;
         double x_arc, x_horiz = -step_size;
         double step = step_size / frames;
-        
+
         for (int i = 0; i <= frames; i++)
         {
             double t = (double)i / frames;
@@ -295,7 +292,8 @@ void Quadruped::move_forward()
 
             y_arc = height - (sqrt((step_size / 2) * (step_size / 2) - (x_arc + step_size / 2) * (x_arc + step_size / 2)));
             x_horiz = i * step - step_size;
-            Serial.println(x_horiz);
+            DEBUG_PRINT(x_horiz);
+            DEBUG_PRINT("\n");
 
             if (initial_position == 0)
             {
@@ -319,8 +317,8 @@ void Quadruped::move_forward()
         }
         initial_position = initial_position == 0 ? 1 : 0;
     }
-    Serial.println(initial_position);
-    Serial.println("\n\n");
+    DEBUG_PRINT(initial_position);
+    DEBUG_PRINT("\n\n");
 }
 
 void Quadruped::move_backward()
@@ -417,7 +415,8 @@ void Quadruped ::move_vert()
     moveTo_base_pos();
 }
 
-void Quadruped :: calibrate(){
+void Quadruped ::calibrate()
+{
     Back_Left.calibrate("Back left");
     Back_Right.calibrate("Back right");
     Front_Left.calibrate("Front left");

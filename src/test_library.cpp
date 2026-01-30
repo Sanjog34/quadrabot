@@ -14,6 +14,7 @@ void setup()
     quadruped.moveTo_base_pos();
     delay(1000);
     quadruped.move_vert();
+    delay(1000);
     back_left.move_angles(180, 0);
     back_right.move_angles(0, 180);
     front_left.move_angles(180, 0);
@@ -34,18 +35,23 @@ void setup()
 }
 void loop()
 {
-    if (Serial.available())
-    {
-        char c = Serial.read();
-        if (c == 'a')
+        if (Serial.available())
         {
-            Serial.println("start");
-            quadruped.move_forward();
-            Serial.println("end");
-        }
-        if (c == 'b')
-        {
-            quadruped.moveTo_base_pos();
-        }
+            char c = Serial.read();
+            if (c == 'a')
+            {
+                // Serial.println("start");
+                quadruped.move_forward();
+                // Serial.println("end");
+            }
+           else if (c == 'b')
+            {
+                quadruped.move_backward();
+            }
+                       else if (c == 'c')
+            {
+                quadruped.moveTo_base_pos();
+            }
+        
     }
 }
